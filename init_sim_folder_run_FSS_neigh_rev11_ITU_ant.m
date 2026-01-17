@@ -14,6 +14,7 @@ addpath('C:\Users\nlasorte\OneDrive - National Telecommunications and Informatio
 addpath('C:\Users\nlasorte\OneDrive - National Telecommunications and Information Administration\MATLAB2024\General_Movelist')
 addpath('C:\Users\nlasorte\OneDrive - National Telecommunications and Information Administration\MATLAB2024\3.1GHz Neighborhood') %%%%%%Rand Real Data
 addpath('C:\Users\nlasorte\OneDrive - National Telecommunications and Information Administration\MATLAB2024\Generic_Bugsplat')
+addpath('C:\Users\nlasorte\OneDrive - National Telecommunications and Information Administration\MATLAB2024\Census_Functions')
 addpath('C:\Local Matlab Data\Local MAT Data') %%%%%%%One Drive Error with mat files
 pause(0.1)
 
@@ -216,6 +217,8 @@ end
 cell_sim_data(1:2,:)'
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%This where you set the inputs for the simulation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -259,13 +262,60 @@ cell_sim_data(1:2,:)'
 % tf_opt=1; %%%%This is for the optimized move list, (not WinnForum)
 % tf_3sector=0  %%%%%Else 1 Sector
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-rev=123; %%%%%Nats Stadium Example: 50th percentile with Azimuth
+% rev=123; %%%%%Nats Stadium Example: 50th percentile with Azimuth
+% freq_separation=0; %%%%%%%Assuming co-channel
+% bs_eirp=50.5%%%% %%%%%EIRP [dBm/10MHz] for Rural, Suburan, Urban: 62dBm/1MHz --> 36.25dBm/MHz at 50th (0,0), then - 1.25 for 80% TDD, 35dBm/Mhz --> 45dBm/10MHz
+% mitigation_dB=0%:10:30;  %%%%%%%%% in dB%%%%% Beam Muting or PRB Blanking (or any other mitigation mechanism):  30 dB reduction %%%%%%%%%%%%Consider have this be an array, 3dB step size, to get a more granular insight into how each 3dB mitigation reduces the coordination zone.
+% mc_size=1;%%%% Since we're at 50%
+% tf_full_binary_search=1;  %%%%%Search all DPA Points, not just the max distance point
+% min_binaray_spacing=1%2;%4%8; %%%%%%%minimum search distance (km)
+% %%%reliability=[1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,91,92,93,94,95,96,97,98,99]'; %%%A custom ITM range to interpolate from
+% reliability=50%
+% move_list_reliability=reliability;
+% agg_check_reliability=reliability;
+% FreqMHz=7250;
+% confidence=50;
+% mc_percentile=100%80%%%100;% since we're at 1 MC sim
+% sim_radius_km=128%128%256%512; %%%%%%%%Placeholder distance         binary_dist_array=[2,4,8,16,32,64,128,256,512,1024,2048];
+% tf_clutter=0;%1%;  %%%%%%%????, Just do this in the EIRP reductions
+% sim_folder1='C:\Local Matlab Data\7GHz FSS Neighborhood Test Sims'%%%%'Z:\Matlab2025 Sims\7GHz FSS Neighborhood'  %%%%%%%%%%'C:\Local Matlab Data\7GHz FSS Neighborhood Test Sims'
+% tf_opt=1; %%%%This is for the optimized move list, (not WinnForum)
+% tf_3sector=0  %%%%%Else 1 Sector
+% tf_ant_square=0 %%%%%%%Instead of the trapezoid method used in CBRS
+% cell_sim_data{1,33}='tf_ant_square';
+% cell_sim_data([2:end],33)=num2cell(tf_ant_square);
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% rev=124; %%%%%Nats Stadium Example: 50th percentile with Azimuth and looking at Urban Area Impact
+% freq_separation=0; %%%%%%%Assuming co-channel
+% bs_eirp=50.5%%%% %%%%%EIRP [dBm/10MHz] for Rural, Suburan, Urban: 62dBm/1MHz --> 36.25dBm/MHz at 50th (0,0), then - 1.25 for 80% TDD, 35dBm/Mhz --> 45dBm/10MHz
+% mitigation_dB=0%:10:30;  %%%%%%%%% in dB%%%%% Beam Muting or PRB Blanking (or any other mitigation mechanism):  30 dB reduction %%%%%%%%%%%%Consider have this be an array, 3dB step size, to get a more granular insight into how each 3dB mitigation reduces the coordination zone.
+% mc_size=1;%%%% Since we're at 50%
+% tf_full_binary_search=1;  %%%%%Search all DPA Points, not just the max distance point
+% min_binaray_spacing=4%8; %%%%%%%minimum search distance (km)
+% %%%reliability=[1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,91,92,93,94,95,96,97,98,99]'; %%%A custom ITM range to interpolate from
+% reliability=50%
+% move_list_reliability=reliability;
+% agg_check_reliability=reliability;
+% FreqMHz=7250;
+% confidence=50;
+% mc_percentile=100%80%%%100;% since we're at 1 MC sim
+% sim_radius_km=128%128%256%512; %%%%%%%%Placeholder distance         binary_dist_array=[2,4,8,16,32,64,128,256,512,1024,2048];
+% tf_clutter=0;%1%;  %%%%%%%????, Just do this in the EIRP reductions
+% sim_folder1='C:\Local Matlab Data\7GHz FSS Neighborhood Test Sims'%%%%'Z:\Matlab2025 Sims\7GHz FSS Neighborhood'  %%%%%%%%%%'C:\Local Matlab Data\7GHz FSS Neighborhood Test Sims'
+% tf_opt=0%1; %%%%This is for the optimized move list, (not WinnForum)
+% tf_3sector=0  %%%%%Else 1 Sector
+% tf_ant_square=0 %%%%%%%Instead of the trapezoid method used in CBRS
+% cell_sim_data{1,33}='tf_ant_square';
+% cell_sim_data([2:end],33)=num2cell(tf_ant_square);
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+rev=125; %%%%%Nats Stadium Example: 50th percentile with Azimuth and looking at Urban Area Impact
 freq_separation=0; %%%%%%%Assuming co-channel
 bs_eirp=50.5%%%% %%%%%EIRP [dBm/10MHz] for Rural, Suburan, Urban: 62dBm/1MHz --> 36.25dBm/MHz at 50th (0,0), then - 1.25 for 80% TDD, 35dBm/Mhz --> 45dBm/10MHz
 mitigation_dB=0%:10:30;  %%%%%%%%% in dB%%%%% Beam Muting or PRB Blanking (or any other mitigation mechanism):  30 dB reduction %%%%%%%%%%%%Consider have this be an array, 3dB step size, to get a more granular insight into how each 3dB mitigation reduces the coordination zone.
 mc_size=1;%%%% Since we're at 50%
 tf_full_binary_search=1;  %%%%%Search all DPA Points, not just the max distance point
-min_binaray_spacing=1%2;%4%8; %%%%%%%minimum search distance (km)
+min_binaray_spacing=1%4%8; %%%%%%%minimum search distance (km)
 %%%reliability=[1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,91,92,93,94,95,96,97,98,99]'; %%%A custom ITM range to interpolate from
 reliability=50%
 move_list_reliability=reliability;
@@ -282,7 +332,6 @@ tf_ant_square=0 %%%%%%%Instead of the trapezoid method used in CBRS
 cell_sim_data{1,33}='tf_ant_square';
 cell_sim_data([2:end],33)=num2cell(tf_ant_square);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 
 
@@ -501,20 +550,13 @@ for base_idx=2:1:num_locations
     data_label1=temp_single_cell_sim_data{col_data_label_idx};
     data_label1=data_label1(find(~isspace(data_label1)));  %%%%%%%%%%Remove the White Spaces
     cell_sim_data{base_idx,col_data_label_idx}=data_label1;
-    % temp_base_polygon=temp_single_cell_sim_data{col_base_polygon_idx};
-    % temp_rx_htm=temp_single_cell_sim_data{col_rx_htm_idx};
-    % str_sat_name=temp_single_cell_sim_data{col_sat_id_idx};
-    % temp_base_pts=temp_single_cell_sim_data{col_pp_pts_idx};
-    % temp_ant_diamter=temp_single_cell_sim_data{col_ant_dia_idx};
-    % temp_ant_gain=temp_single_cell_sim_data{col_ant_gain_idx};
-    % temp_str_ant_pattern=temp_single_cell_sim_data{col_ant_pat_str_idx};
+
     rx_temp_k=temp_single_cell_sim_data{col_rx_noise_temp_idx};
     rx_bw_mhz=temp_single_cell_sim_data{col_rx_if_bw_idx};
     in_ratio=temp_single_cell_sim_data{col_in_ratio_idx};
     x_pol_dB=temp_single_cell_sim_data{col_x_pol_dB_idx};
     fdr_dB=temp_single_cell_sim_data{col_fdr_dB_idx};
     tf_cust_ant=temp_single_cell_sim_data{col_tf_cust_ant_idx};
-
 
     %%%%%%%Calcualte the DPA Threshold
     if tf_cust_ant==1
@@ -558,16 +600,15 @@ parallel_flag=0%1%0;
 [workers,parallel_flag]=check_parallel_toolbox(app,parallel_flag)
 workers=2
 tf_recalculate=0%1%0%1
-tf_rescrap_rev_data=0%1
-tf_print_excel=1%0%1
+tf_rescrap_rev_data=1%0%1
+tf_print_excel=1%0%1%0%1
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-neighborhood_wrapper_rev10_bs_azi_idx(app,rev_folder,parallel_flag,tf_server_status,workers,tf_recalculate,tf_rescrap_rev_data,tf_print_excel)
+%neighborhood_wrapper_rev10_bs_azi_idx(app,rev_folder,parallel_flag,tf_server_status,workers,tf_recalculate,tf_rescrap_rev_data,tf_print_excel)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+neighborhood_wrapper_rev11_bs_azi_idx_ua2023(app,rev_folder,parallel_flag,tf_server_status,workers,tf_recalculate,tf_rescrap_rev_data,tf_print_excel)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
