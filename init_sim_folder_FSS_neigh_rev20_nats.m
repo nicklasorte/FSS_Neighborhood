@@ -71,7 +71,7 @@ cell_data_header{39}='tf_keyhole_ant';  %%%%%%For part 0 to limit
 
 
 %%%%%%%%%%%%%%%%%%%%%%%Nats Park Example
-tf_repull_nats=0%1%0%1%0%1%0%1%0%0%1
+tf_repull_nats=1%0%1%0%1%0%1%0%1%0%0%1
 data_num=6%5%4%3%2
 cell_data_filename=strcat('Nats_FSS_cell_sim_data',num2str(data_num),'.mat');
 [var_exist]=persistent_var_exist_with_corruption(app,cell_data_filename);
@@ -116,24 +116,38 @@ else
     cell_sim_data=vertcat(cell_data_header,cell_example_data);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Calculate the Satellite Azimuth/Elevation
-    str_tle_filename=strcat('full_geo.tle');
-    str_website='http://www.celestrak.com/NORAD/elements/geo.txt'
+    % % % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Calculate the Satellite Azimuth/Elevation
+    % % % str_tle_filename=strcat('full_geo.tle');
+    % % % str_website='http://www.celestrak.com/NORAD/elements/geo.txt'
+    % % % 
+    % % % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Pull the TLE Needed
+    % % % tic;
+    % % % outfilename=websave(str_tle_filename,str_website);
+    % % % toc;
+    % % % 
+    % % % %text = fileread(str_tle_filename)%, 'FileType', 'text')
+    % % % satData = readtable(str_tle_filename, 'FileType', 'text');
+    % % % satData.Properties.VariableNames
+    % % % head(satData)
+    % % % 
+    % % % % tleStruct=tleread(str_tle_filename);
+    % % % % cell_tle=struct2cell(tleStruct);
+    % % % cell_tle=table2cell(satData);
+    % % % % cell_tle_names=cellfun(@char, cell_tle(1,:), 'UniformOutput', false)';
+    % % % cell_tle_names=cellfun(@char, cell_tle(:,1), 'UniformOutput', false)';
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Pull the TLE Needed
+    str_tle_filename = strcat('full_geo.csv');   % use .csv so readtable detects commas
+    str_website = 'https://celestrak.org/NORAD/elements/gp.php?GROUP=geo&FORMAT=csv';
+
     tic;
-    outfilename=websave(str_tle_filename,str_website);
+    outfilename = websave(str_tle_filename, str_website);
     toc;
 
-    satData = readtable('full_geo.tle', 'FileType', 'text');
-    satData.Properties.VariableNames
-    head(satData)
+    satData = readtable(str_tle_filename, 'FileType', 'text');   % auto-detects comma delimiter
+    cell_tle = table2cell(satData);
+    cell_tle_names = cellfun(@char, cell_tle(:,1), 'UniformOutput', false)';   % OBJECT_NAME col
 
-    % tleStruct=tleread(str_tle_filename);
-    % cell_tle=struct2cell(tleStruct);
-    cell_tle=table2cell(satData);
-    % cell_tle_names=cellfun(@char, cell_tle(1,:), 'UniformOutput', false)';
-    cell_tle_names=cellfun(@char, cell_tle(:,1), 'UniformOutput', false)';
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     col_header_sat_id_idx=find(matches(cell_data_header,'Sat_ID'));
@@ -256,6 +270,7 @@ end
 %%%cell_sim_data(1:2,:)'
 cell_nats_data=cell_sim_data;
 cell_nats_data'
+
 
 
 
